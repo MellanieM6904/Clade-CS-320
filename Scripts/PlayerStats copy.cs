@@ -11,13 +11,22 @@ public class PlayerStats : MonoBehaviour
         int armor = 0;
         int hp = 0;
         int stamina = 0;
+        int tempHp = 0; //track the players current health
+        int tempStamina = 0;
 
-        static void updateStats(int, defense, int attack, int fireRes, int armor, int hp, int stamina) {
+        static void updatePermStats(int, defense, int attack, int fireRes, int armor, int hp, int stamina) {
             this.defense += defense;
             this.attack += attack;
             this.fireRes += fireRes;
             this.armor += armor;
             this.hp += hp;
             this.stamina += stamina;
+            this.tempHp += hp;
+            this.tempStamina += stamina;
+        }
+
+        static void updateTempStats(int hp, int stamina) {
+            this.tempHp += hp;
+            this.tempStamina += stamina;
         }
 }
