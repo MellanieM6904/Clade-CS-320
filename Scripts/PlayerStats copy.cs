@@ -4,20 +4,30 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    public:
-        int defense = 0;
-        int attack = 0;
-        int fireRes = 0;
-        int armor = 0;
-        int hp = 0;
-        int stamina = 0;
+    public int defense = 0;
+    public int attack = 0;
+    public int fireRes = 0;
+    public int armor = 0;
+    public int hp = 0;
+    public int stamina = 0;
+    public int tempHp = 0; // track the player's current health
+    public int tempStamina = 0;
 
-        static void updateStats(int, defense, int attack, int fireRes, int armor, int hp, int stamina) {
-            this.defense += defense;
-            this.attack += attack;
-            this.fireRes += fireRes;
-            this.armor += armor;
-            this.hp += hp;
-            this.stamina += stamina;
-        }
+    public void UpdatePermStats(int newDefense, int newAttack, int newFireRes, int newArmor, int newHp, int newStamina)
+    {
+        defense += newDefense;
+        attack += newAttack;
+        fireRes += newFireRes;
+        armor += newArmor;
+        hp += newHp;
+        stamina += newStamina;
+        tempHp += newHp;
+        tempStamina += newStamina;
+    }
+
+    public void UpdateTempStats(int hp, int stamina)
+    {
+        tempHp += hp;
+        tempStamina += stamina;
+    }
 }
