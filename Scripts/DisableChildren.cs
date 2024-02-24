@@ -8,7 +8,7 @@ public class DisableChildren : MonoBehaviour
 
     public void DisableAllChildren() {
         for (int i = 0; i < parent.transform.childCount; i++) {
-            var child = parent.transform.getChild(i).gameObject();
+            var child = parent.transform.GetChild(i).gameObject;
 
             if (child != null) {
                 child.SetActive(false);
