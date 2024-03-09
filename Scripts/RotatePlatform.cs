@@ -6,8 +6,8 @@ public class RotatePlatform : MonoBehaviour
 {
     PlayerControls playerControls;
 
-    public float rAmount = 1; // how much to rotate w mouse movement
-    public float rSpeed = 5; // how fast to rotate w mouse movement
+    public float rAmount = 3; // how much to rotate w mouse movement
+    public float rSpeed = 7; // how fast to rotate w mouse movement
 
     Vector2 cameraInput;
 
