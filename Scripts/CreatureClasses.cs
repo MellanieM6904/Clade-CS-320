@@ -41,6 +41,16 @@ public class Part: MonoBehavior {
 public class Creature: MonoBehavior {
     new Pattern color;
     List<Part> parts;
-    // implement stats class from Koby here
+    ReferencedScript stats = GetComponent<PlayerStats copy>();
     new Body body;
+    int arms = 0;
+    int legs = 0;
+    int heads = 0;
+
+    static method updateParts(int arms, int legs, int heads, Part part) {
+        this.arms += arms;
+        this.legs += legs;
+        this.heads += heads;
+        parts.Add(part);
+    }
 }
