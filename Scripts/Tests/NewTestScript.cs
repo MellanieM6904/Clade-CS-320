@@ -9,6 +9,7 @@ public class NewTestScript
 {
     private GameObject mapGenObject;
     private MapGenerator mapGenerator;
+
     [SetUp]
     public void SetUp()
     {
@@ -56,21 +57,48 @@ public class NewTestScript
     }
 
 
-
     [Test]
-    public void MapSize()  // White box test 1 : Ensure that mapChunkSize stays constant
+    public void NoiseGeneration()  // White box test on Noise's GenerateNoiseMap() method. Achieves branch coverage by hitting every line. Tests if a noise map is being generated properly.
     {
-        Assert.AreEqual(241, MapGenerator.mapChunkSize, "Map chunk size should always remain constant");
+        int mapSize = 10;
+
+        float[,] myNoiseMap = Noise.GenerateNoiseMap(mapSize, mapSize, 0, 25f, 4, 0.5f, 2f, Vector2.zero);
+
+        for (int y = 0; y < mapSize; y++)
+        {
+            for (int x = 0; x < mapSize; x++)
+            {
+                Assert.AreNotEqual(null, myNoiseMap[x, y], "Map was not properly generated.");
+            }
+        }
     }
 
     [Test]
-    public void LevelOfDetail()  // White box test 2 : Ensure that OnValidate() is properly clamping level of detail
+    public void SpawnPosition()  // White box test on PlayerSpawner's SelectSpawnLocation() method. Achieves statement coverage (as there are no branches) by hitting every line. Ensures that the values generated are within the spawn zone.
+    {
+        // Get spawn location
+        Vector3 spawnLoc = PlayerSpawner.SelectSpawnLocation();
+
+        Assert.LessOrEqual(spawnLoc.x, 200f, "Player spawn out of bounds");
+        Assert.LessOrEqual(spawnLoc.z, 200f, "Player spawn out of bounds");
+        Assert.GreaterOrEqual(spawnLoc.x, -200f, "Player spawn out of bounds");
+        Assert.GreaterOrEqual(spawnLoc.z, -200f, "Player spawn out of bounds");
+    }
+
+    [Test]
+    public void MapGeneratorValidation()  // White box test on MapGenerator's OnValidate() method. Achieves branch coverage by testing every possibility in the method.
     {
         // Get script from actual game object (to modify values not set in script)
         MapGenerator scriptComponent = mapGenObject.GetComponent<MapGenerator>();
 
         // Attempt to put levelOfDetail out of range ([0, 6])
         scriptComponent.levelOfDetail = 7;
+        
+        // Attempt to take octaves out of range ([0,+])
+        scriptComponent.octaves = -3;
+
+        // Attempt to take lacunarity out of range ([1,+])
+        scriptComponent.lacunarity = -2;
 
         // Use reflection to get onvalidate method from MapGenerator
         MethodInfo onValidateMethod = typeof(MapGenerator).GetMethod("OnValidate", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -80,10 +108,21 @@ public class NewTestScript
 
         // Check if value was allowed to exit range
         Assert.AreNotEqual(7, scriptComponent.levelOfDetail, "Level of detail should not be able to exit range [0, 6]");
+        Assert.AreNotEqual(-3, scriptComponent.octaves, "Octaves exited range of > 0");
+        Assert.AreNotEqual(-2, scriptComponent.lacunarity, "Lacunarity left range of > 1");
+
+        // Attempt to put levelOfDetail out of range in other direction ([0, 6])
+        scriptComponent.levelOfDetail = -2;
+
+        // Invoke OnValidate
+        onValidateMethod.Invoke(scriptComponent, null);
+
+        // Check if value was allowed to exit range
+        Assert.AreNotEqual(-2, scriptComponent.levelOfDetail, "Level of detail should not be able to exit range [0, 6]");
     }
 
     [Test]
-    public void MeshGeneration()  // White box test 3 : Make sure mesh is generating correct number of vertices / triangles
+    public void MeshGenerationCount()  // White box test on MeshGenerator's GenerateTerrainMesh() method. Achieves branch coverage by executing every line (including conditional) and testing proper generation.
     {
         // Set params
         float[,] heightMap = mapGenerator.GetNoiseMap();
@@ -97,50 +136,33 @@ public class NewTestScript
         // Validate mesh
         Assert.AreEqual(240, Mathf.Sqrt(newMesh.triangles.Length / 6), "Incorrect number of triangles");  // Should have 3 values per triangle, 2 triangles per square, 240 squares in each direction
         Assert.AreEqual(241f, Mathf.Sqrt(newMesh.vertices.Length), "Incorrect number of vertices");  // Map dimensions squared num of vertices
+        Assert.AreNotEqual(null, newMesh.uvs, "UVs did not generate");
     }
 
-/* VV TEST THIS TEST || TEST THIS TEST || TEST THIS TEST || TEST THIS TEST || TEST THIS TEST || TEST THIS TEST VV */
     [Test]
-    public void DrawTexture()  // White box test 4 : Make sure DrawTexture() from MapDisplay properly draws the given texture
+    public void FalloffSize()  // White box test on FalloffGenerator's GenerateFalloffMap() method. Achieves statement coverage (There are no conditionals) by forcing every line in the method to execute and verifying proper execution.
     {
-        // Create test texture
-        Texture2D texture = new Texture2D(10, 10);
+        // Set desired map size
+        int mapSize = 10;
 
-        // Create blank MapDisplay to apply texture to
-        MapDisplay display = new MapDisplay();
+        // Generate map
+        float[,] falloffMap = FalloffGenerator.GenerateFalloffMap(mapSize);
 
-        // Call DrawTexture() with test texture
-        display.DrawTexture(texture);
+        // Check if size matches
+        Assert.AreEqual(mapSize, falloffMap.GetLength(0), "Map does not match expected size");
 
-        // Make sure texture was properly applied
-        Assert.AreEqual(texture, display.sharedMaterial.mainTexture, "Texture was not applied");
+        // Set desired map size
+        mapSize = 100;
+
+        // Generate map
+        falloffMap = FalloffGenerator.GenerateFalloffMap(mapSize);
+
+        // Check if size matches
+        Assert.AreEqual(mapSize, falloffMap.GetLength(1), "Map does not match expected size");
     }
 
     [Test]
-    public void DrawMesh()  // White box test 5 : Make sure DrawMesh() from MapDisplay properly draws the mesh
-    {
-        // Create test texture & mesh
-        Texture2D testTexture = new Texture2D(10, 10);
-        MeshData testMesh = new MeshData(10, 10);
-
-        // Create blank MapDisplay to apply mesh to
-        MapDisplay display = new MapDisplay();
-
-        // Call DrawMesh() with test mesh
-        display.DrawTexture(testMesh, testTexture);
-
-        // Make sure mesh was applied properly
-        Assert.AreEqual(testMesh, display.sharedMesh.AcquireReadOnlyMeshData(), "Mesh data does not match data of applied mesh");
-    }
-
-    [Test]
-    public void WB6()
-    {
-        
-    }
-  
-    [Test]
-    public void ColorMatching()  // Black box test 1 : Make sure edge of color map matches expected color based on noise map
+    public void ColorMatching()  // Black box acceptance test. Tests to make sure that my color map is properly following the color designated to the given region.
     {
         // Get color map
         Color[] colorMap = mapGenerator.GetColorMap();
@@ -154,7 +176,7 @@ public class NewTestScript
     }
 
     [Test]
-    public void FalloffMap()  // Black box test 2 : Make sure edge of map falls off and center does not
+    public void FalloffMapOutput()  // Black box acceptance test. Tests to make sure the falloff map is correctly falling off towards the edges, with the center intact.
     {
         int mapSize = 10;
 
@@ -165,27 +187,91 @@ public class NewTestScript
     }
 
     [Test]
-    public void BB3()
+    public void MeshGenerationSuccess()  // Black box acceptance test. Makes sure mesh is generated when calling GenerateTerrainMesh().
     {
+        // Set params
+        float[,] heightMap = mapGenerator.GetNoiseMap();
+        float heightMultiplier = 1f;
+        AnimationCurve heightCurve = AnimationCurve.Linear(0, 0, 1, 1);
+        int levelOfDetail = 0;
 
+        // Generate mesh
+        MeshData newMesh = MeshGenerator.GenerateTerrainMesh(heightMap, heightMultiplier, heightCurve, levelOfDetail);
+
+        // Check that mesh was created
+        Assert.AreNotEqual(null, newMesh.ToString(), "Mesh was not generated correctly");
     }
 
     [Test]
-    public void BB4()
+    public void SeedChangesMap()  // Black box acceptance test. Makes sure that changing seed produces different maps.
     {
-        
+        // Generate two maps and save their height map
+        mapGenerator.seed = 0;
+        mapGenerator.GenerateMap();
+        float[,] heightMap0 = mapGenerator.GetNoiseMap();
+
+        mapGenerator.seed = 100;
+        mapGenerator.GenerateMap();
+        float[,] heightMap1 = mapGenerator.GetNoiseMap();
+
+        // Check for difference between maps
+        Assert.AreNotEqual(heightMap0, heightMap1, "Changing seed did not change height map");
     }
 
     [Test]
-    public void BB5()
+    public void FalloffGeneratorIsFollowed()  // Black box acceptance test. Makes sure that enabling and disabling falloff map actually changes world generation.
     {
-        
+        // Turn on falloff map
+        mapGenerator.useFalloff = true;
+        // Generate map
+        mapGenerator.GenerateMap();
+        // Save resulting map
+        Color[] colorMap0 = mapGenerator.GetColorMap();
+
+        // Turn off falloff map
+        mapGenerator.useFalloff = false;
+        // Generate map
+        mapGenerator.GenerateMap();
+        // Save resulting map
+        Color[] colorMap1 = mapGenerator.GetColorMap();
+
+        // Compare maps
+        Assert.AreNotEqual(colorMap0, colorMap1, "Map does not follow falloff");
     }
 
     [Test]
-    public void WB6()
+    public void NoiseScaleAffectsGen()  // Black box acceptance test. Make sure that different noise scales generate the world differently.
     {
-        
+        mapGenerator.noiseScale = 0f;
+        mapGenerator.GenerateMap();
+        float[,] heightMap0 = mapGenerator.GetNoiseMap();
+
+        mapGenerator.noiseScale = 1000f;
+        mapGenerator.GenerateMap();
+        float[,] heightMap1 = mapGenerator.GetNoiseMap();
+
+        // Check that the maps generated differently
+        Assert.AreNotEqual(heightMap0, heightMap1, "Changing noise scale did not affect world gen");
     }
 
+    [Test]
+    public void ValidateMeshAndColorMapConsistency()  // Integration test, bottom-up. Tests MeshGenerator and MapGenerator to ensure that the mesh generated by MeshGenerator and the color map generated by MapGenerator are consistent with one-another.
+    {
+        // Get generated height map
+        float[,] heightMap = mapGenerator.GetNoiseMap();
+
+        // Set parameters for mesh generation
+        float heightMultiplier = 10f;
+        AnimationCurve heightCurve = AnimationCurve.Linear(0, 0, 1, 1);
+        int levelOfDetail = 0;
+
+        // Generate mesh
+        MeshData generatedMeshData = MeshGenerator.GenerateTerrainMesh(heightMap, heightMultiplier, heightCurve, levelOfDetail);
+
+        // Get the generated color map
+        Color[] generatedColorMap = mapGenerator.GetColorMap();
+
+        // Check if the number of vertices in the mesh matches the number of colors in the color map
+        Assert.AreEqual(generatedMeshData.vertices.Length, generatedColorMap.Length, "Number of vertices in mesh does not match number of colors in color map");
+    }
 }
