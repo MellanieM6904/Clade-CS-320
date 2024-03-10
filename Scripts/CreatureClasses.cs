@@ -5,42 +5,26 @@ Author: Mellanie Martin
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+public class Creature : MonoBehaviour {
+    public int arms = 1;
+    public int legs = 1;
+    public int heads = 1;
+    public string name = "Default";
 
-public class Body: MonoBehavior {
-    List<Vector3> vertices;
-    List<int> triangles;
-    List<Bone> bones;
-}
-
-public class Bone: MonoBehavior {
-    int num;
-    Vector3 position;
-    new BoneWeight weight;
-}
-
-public class BoneWeight: MonoBehavior {
-    int boneIndex;
-    float weight;
-}
-
-public class Pattern: MonoBehavior {
-    Material design;
-    Texture texture;
-    string colorA;
-    string colorB;
-}
-
-public class Part: MonoBehavior {
-    new Pattern color;
-    List<Vector3> vertices;
-    List<int> triangles;
-    string partType;
-    string partName;
-}
-
-public class Creature: MonoBehavior {
-    new Pattern color;
-    List<Part> parts;
-    // implement stats class from Koby here
-    new Body body;
+    public void updateParts(int a, int l, int h) {
+        if (arms + a <= 3 && arms + a > 0) {
+            this.arms += a;
+        }
+        if (legs + l <= 3 && legs + l > 0) {
+            this.legs += l;
+        }
+        if (heads + h <= 3 && heads + h > 0) {
+            this.heads += h;
+        }
+    }
+    public void updateName(string newName) {
+        if (newName.Length <= 26 && newName.Length > 0) {
+            this.name = newName;
+        }
+    }
 }
