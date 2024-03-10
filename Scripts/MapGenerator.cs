@@ -14,7 +14,6 @@ public class MapGenerator : MonoBehaviour
     [Range(0, 6)]
     public int levelOfDetail; // Level of detail for the map
 
-    // Parameters for noise generation
     public int seed, octaves;
     public float noiseScale, lacunarity, meshHeightMultiplier;
     public AnimationCurve meshHeightCurve;
@@ -65,7 +64,6 @@ public class MapGenerator : MonoBehaviour
                         break;
                     }
                 }
-
             }
         }
 
