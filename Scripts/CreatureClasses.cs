@@ -11,7 +11,7 @@ public class Creature : MonoBehaviour {
     public int heads = 1;
     public string name = "Default";
 
-    public void updateParts(int a, int l, int h) {
+    public void updateParts(int a, int l, int h) { // inc/dec # of each part
         if (arms + a <= 3 && arms + a > 0) {
             this.arms += a;
         }
@@ -22,7 +22,7 @@ public class Creature : MonoBehaviour {
             this.heads += h;
         }
     }
-    public void updateName(string newName) {
+    public void updateName(string newName) { // store user-given creature name
         if (newName.Length <= 26 && newName.Length > 0) {
             this.name = newName;
         }
