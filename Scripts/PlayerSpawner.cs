@@ -11,7 +11,7 @@ public class PlayerSpawner : MonoBehaviour
         SpawnPlayer();
     }
 
-    void SpawnPlayer()
+    Vector3 SpawnPlayer()
     {
         // Define the bounds of the spawn area
         float minX = -200f;
@@ -27,6 +27,6 @@ public class PlayerSpawner : MonoBehaviour
         Vector3 spawnPosition = new Vector3(spawnX, 1, spawnZ);
 
         // Spawn the player at the randomly chosen location
-        Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        return(spawnPosition);
     }
 }
