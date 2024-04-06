@@ -8,10 +8,11 @@ public class PlayerSpawner : MonoBehaviour
 
     void Start()
     {
-        SpawnPlayer();
+        // Spawn the player at the randomly chosen location
+        Instantiate(playerPrefab, SelectSpawnLocation(), Quaternion.identity);
     }
 
-    void SpawnPlayer()
+    public static Vector3 SelectSpawnLocation()
     {
         // Define the bounds of the spawn area
         float minX = -200f;
@@ -26,7 +27,8 @@ public class PlayerSpawner : MonoBehaviour
         // Set the spawn position
         Vector3 spawnPosition = new Vector3(spawnX, 1, spawnZ);
 
-        // Spawn the player at the randomly chosen location
-        Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        return spawnPosition;
     }
+
+
 }
