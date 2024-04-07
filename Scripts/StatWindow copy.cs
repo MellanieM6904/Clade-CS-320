@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class StatWindow : MonoBehaviour
 {
-    public PlayerStats myCharacter;
-    public Text healthText;
-    public Text attackText; 
-    public Text defenseText;
-    public Text fireResText;
-    public Text armorText;
-    public Text staminaText;
-    public Text classText;
+    public Creature myCharacter;
+    [SerializeField] TextMeshProUGUI healthText;
+    [SerializeField] TextMeshProUGUI attackText; 
+    [SerializeField] TextMeshProUGUI defenseText;
+    [SerializeField] TextMeshProUGUI visionText;
+    [SerializeField] TextMeshProUGUI staminaText;
+    [SerializeField] TextMeshProUGUI classText;
 
     public void Start() {
         GetStatStrings();
@@ -30,8 +30,7 @@ public class StatWindow : MonoBehaviour
         healthText.text = "Health: " + myCharacter.hp.ToString();
         attackText.text = "Damage: " + myCharacter.attack.ToString();
         defenseText.text = "Defense: " + myCharacter.defense.ToString();
-        fireResText.text = "Fire Res: " + myCharacter.fireRes.ToString();
-        armorText.text = "Armor: " + myCharacter.armor.ToString();
+        visionText.text = "Vision: " + myCharacter.vision.ToString();
         staminaText.text = "Stamina: " + myCharacter.stamina.ToString();
         return;
     }
@@ -40,13 +39,13 @@ public class StatWindow : MonoBehaviour
         int health = myCharacter.hp;
         int attack = myCharacter.attack;
         int defense = myCharacter.defense;
-        int fireRes = myCharacter.fireRes;
-        int armor = myCharacter.armor;
+        int vision = myCharacter.vision;
+        //int armor = myCharacter.armor;
         int stamina = myCharacter.stamina;
 
-        if (attack > 5) {
+        if (attack > 5 && vision > 4) { // MM
             classText.text = "Predator";
-        } else if (armor > 5) {
+        } else if (defense > 5 && vision > 4) { // MM
             classText.text = "Prey";
         } else {
             classText.text = "Destined for Extinction";
