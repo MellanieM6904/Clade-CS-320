@@ -130,9 +130,12 @@ public class MapGenerator : MonoBehaviour
                 // Loop through each possible region
                 for (int i = 0; i < regions.Length; i++)
                 {
-                    if (curHeight <= regions[i].height)  // If map location is in current region
+                    if (curHeight >= regions[i].height)  // If map location is in current region
                     {
                         colorMap[y * mapChunkSize + x] = regions[i].color;  // Assigns region color to current map location
+                    }
+                    else
+                    {
                         break;
                     }
                 }
