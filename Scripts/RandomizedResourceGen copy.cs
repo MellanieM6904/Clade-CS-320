@@ -60,6 +60,7 @@ public class RandomizedResourceGen : MonoBehaviour
 
     private void destroy() {
         self.attainable = false; //set object to invisible and non-interactible
+        items.remove(self)
     }
 
     public void pickUp() { //trigger on item interaction
