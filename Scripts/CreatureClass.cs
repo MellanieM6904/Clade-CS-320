@@ -1,10 +1,11 @@
 /*
-Author: Mellanie Martin
+Author(s): Mellanie Martin, Koby Grah
 */
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class Creature : MonoBehaviour {
     // Written by Mellanie Martin
     public int arms = 1;
@@ -15,11 +16,11 @@ public class Creature : MonoBehaviour {
     public int defense = 0;
     public int attack = 0;
     public int vision = 0; // MM
-    //public int armor = 0;
     public int hp = 0;
     public int stamina = 0;
     public int tempHp = 0; // track the player's current health
     public int tempStamina = 0;
+
     // Written by Mellanie Martin
     public void updateArms(int a) {
         if (arms + a <= 3 && arms + a > 0) {
@@ -44,28 +45,29 @@ public class Creature : MonoBehaviour {
             this.name = newName;
         }
     }
+    
     // Written by Koby Grah
     public void updateDefense(int newDefense) {
-        defense = newDefense;
+        this.defense = newDefense;
     }
     public void updateAttack(int newAttack) {
-        attack = newAttack;
+        this.attack = newAttack;
     }
     public void updateVision(int newVision) {
-        vision = newVision;
+        this.vision = newVision;
     }
     public void updateHP(int newHp) {
-        hp = newHp;
-        tempHp = newHp;
+        this.hp = newHp;
+        this.tempHp = newHp;
     }
     public void updateStamina(int newStamina) {
-        stamina = newStamina;
-        tempStamina = newStamina;
+        this.stamina = newStamina;
+        this.tempStamina = newStamina;
     }
 
     public void UpdateTempStats(int hp, int stamina)
     {
-        tempHp += hp;
-        tempStamina += stamina;
+        this.tempHp += hp;
+        this.tempStamina += stamina;
     }
 }
