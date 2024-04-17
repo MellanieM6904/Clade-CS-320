@@ -25,7 +25,7 @@ public class PlayerSpawner : MonoBehaviour
         float spawnZ = Random.Range(minZ, maxZ);
 
         // Set the spawn position
-        Vector3 spawnPosition = new Vector3(spawnX, 1, spawnZ);
+        Vector3 spawnPosition = new Vector3(spawnX, 100, spawnZ);
 
         return spawnPosition;
     }
