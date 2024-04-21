@@ -5,12 +5,13 @@ using UnityEngine.UI;
 
 public class HidePanel : MonoBehaviour
 {
-    public GameObject panel; // access panel object
+    public GameObject panel;
+    
     public void hide() {
-        panel.gameObject.SetActive(false); // flip panel's boolean
+        panel.gameObject.SetActive(false);
     }
 
     public void show() {
-        panel.gameObject.SetActive(true); // flip panel's boolean
+        panel.gameObject.SetActive(true);
     }
 }
